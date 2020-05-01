@@ -19,3 +19,11 @@ steps:
     npm install
     npm run build
   displayName: 'npm install and build'
+
+- task: SnykSecurityScan@0
+  inputs:
+    serviceConnectionEndpoint: 'SnykClintonHerget'
+    testType: 'app'
+    monitorOnBuild: true
+    failOnIssues: true
+    organization: 'herget-demo-inc'
