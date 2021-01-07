@@ -1,7 +1,12 @@
-version: 2.1
+version: '2.1'
 orbs:
-  node: circleci/node@3.0.0
-workflows:
-  node-tests:
-    jobs:
-      - node/test
+  snyk: snyk/snyk@x.y.z
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:4.8.2'
+    steps:
+      - checkout
+      - run: npm install -q
+      - snyk/scan
+workflows: null
