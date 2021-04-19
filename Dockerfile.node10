@@ -1,5 +1,0 @@
-FROM node:10.4.0
-
-RUN apt-get install -y imagemagick
-
-RUN echo "hello world" > /helloworld.txt
