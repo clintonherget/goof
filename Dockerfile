@@ -1,4 +1,4 @@
-FROM node:10.4.0
+FROM node:16.1-slim
 
 RUN apt-get -y install imagemagick
 
