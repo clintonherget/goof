@@ -1,4 +1,4 @@
-FROM node:10.4.0
+FROM node:12.22.6-bullseye-slim
 
 RUN apt-get -y install imagemagick
 
