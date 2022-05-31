@@ -1,0 +1,55 @@
+name: Snyk SCA, Code, IaC and Container CLI monitor example with sha verification
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    name: Test and build
+    environment: snyk
+    runs-on: ubuntu-latest
+steps:
+  - uses: actions/checkout@v2
+  - name: Setup Snyk + snyk-to-html
+    run: |
+      #!/bin/bash
+      SNYK_VERSION=$(curl https://api.github.com/repos/snyk/cli/releases/latest | jq '.name' | tr -d '"')
+      wget https://github.com/snyk/cli/releases/download/$SNYK_VERSION/snyk-linux.sha256
+      wget https://github.com/snyk/cli/releases/download/$SNYK_VERSION/snyk-linux
+      SHA=$(sha256sum snyk-linux)
+      CHECK_SHA=$(cat snyk-linux.sha256)
+      if [[ $SHA != $CHECK_SHA ]]; then
+        exit 1
+      fi
+
+      SNYK_TO_HTML_VERSION=$(curl https://api.github.com/repos/snyk/cli/releases/latest | jq '.name' | tr -d '"')
+      wget https://github.com/snyk/cli/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux.sha256
+      wget https://github.com/snyk/cli/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux
+      SHA=$(sha256sum snyk-to-html-linux)
+      CHECK_SHA=$(cat snyk-to-html-linux.sha256)
+      if [[ $SHA != $CHECK_SHA ]]; then
+        exit 1
+      fi      
+  - name: Snyk Open Source
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
+    run: |
+      snyk monitor
+      snyk test --all-projects
+  - name: Snyk Code
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
+    run: |
+      snyk code test || true
+  - name: Snyk Container
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
+    run: |
+      docker build . -t yourimage:tag
+      snyk container monitor yourimage:tag --file=Dockerfile
+  - name: Snyk IaC
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
+    run: |
+      snyk iac test || true
