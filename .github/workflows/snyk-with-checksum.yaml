@@ -23,9 +23,9 @@ jobs:
             exit 1
           fi
 
-          SNYK_TO_HTML_VERSION=$(curl https://api.github.com/repos/snyk/cli/releases/latest | jq '.name' | tr -d '"')
-          wget https://github.com/snyk/cli/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux.sha256
-          wget https://github.com/snyk/cli/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux
+          SNYK_TO_HTML_VERSION=$(curl https://api.github.com/repos/snyk/snyk-to-html/releases/latest | jq '.name' | tr -d '"')
+          wget https://github.com/snyk/snyk-to-html/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux.sha256
+          wget https://github.com/snyk/snyk-to-html/releases/download/$SNYK_TO_HTML_VERSION/snyk-to-html-linux
           SHA=$(sha256sum snyk-to-html-linux)
           CHECK_SHA=$(cat snyk-to-html-linux.sha256)
           if [[ $SHA != $CHECK_SHA ]]; then
