@@ -30,7 +30,10 @@ jobs:
           CHECK_SHA=$(cat snyk-to-html-linux.sha256)
           if [[ $SHA != $CHECK_SHA ]]; then
             exit 1
-          fi      
+          fi
+
+          chmod +x snyk-linux
+          chmod +x snyk-to-html-linux
       - name: Snyk Open Source
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
