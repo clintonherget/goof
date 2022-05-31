@@ -35,21 +35,21 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
         run: |
-          snyk monitor
-          snyk test --all-projects
+          ./snyk-linux monitor
+          ./snyk-linux test --all-projects
       - name: Snyk Code
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
         run: |
-          snyk code test || true
+          ./snyk-linux code test || true
       - name: Snyk Container
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
         run: |
           docker build . -t yourimage:tag
-          snyk container monitor yourimage:tag --file=Dockerfile
+          ./snyk-linux container monitor yourimage:tag --file=Dockerfile
       - name: Snyk IaC
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}    
         run: |
-          snyk iac test || true
+          ./snyk-linux iac test || true
